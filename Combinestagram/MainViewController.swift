@@ -29,9 +29,11 @@ class MainViewController: UIViewController {
     @IBOutlet weak var buttonClear: UIButton!
     @IBOutlet weak var buttonSave: UIButton!
     @IBOutlet weak var itemAdd: UIBarButtonItem!
+    @IBOutlet weak var leftBarButtonItem: UIBarButtonItem!
     
     private let bag = DisposeBag()
     private let images = Variable<[UIImage]>([])
+    private var imageCache = [Int]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,10 +63,21 @@ class MainViewController: UIViewController {
     
     @IBAction func actionClear() {
         images.value = []
+        imageCache = []
     }
     
     @IBAction func actionSave() {
+        guard let image = imagePreview.image else { return }
         
+        PhotoWriter.save(image)
+            .asSingle()
+            .subscribe(onSuccess: { [weak self] id in
+                self?.showMessage("Saved with id: \(id)")
+                self?.actionClear()
+                }, onError: { [weak self] error in
+                    self?.showMessage("Error", description: error.localizedDescription)
+            })
+            .disposed(by: bag)
     }
     
     @IBAction func actionAdd() {
@@ -72,7 +85,23 @@ class MainViewController: UIViewController {
         
         let photosVC = storyboard?.instantiateViewController(withIdentifier: "PhotosViewController") as! PhotosViewController
         
-        photosVC.selectedPhoto
+        let newPhoto = photosVC.selectedPhoto.share()
+        
+        newPhoto
+            .takeWhile({ [weak self] (image) -> Bool in
+                return (self?.images.value.count ?? 0) < 6
+            })
+            .filter({ (newImage) -> Bool in
+                return newImage.size.width > newImage.size.height
+            })
+            .filter({ [weak self] (newImage) -> Bool in
+                let len = UIImagePNGRepresentation(newImage)?.count ?? 0
+                guard self?.imageCache.contains(len) == false else {
+                    return false
+                }
+                self?.imageCache.append(len)
+                return true
+            })
             .subscribe(
                 onNext: { [weak self] (newImage) in
                     guard let images = self?.images else {
@@ -86,6 +115,13 @@ class MainViewController: UIViewController {
             )
             .disposed(by: photosVC.bag)
         
+        newPhoto
+            .ignoreElements()
+            .subscribe(onCompleted: { [weak self] in
+                self?.updateNavigationIcon()
+            })
+            .disposed(by: bag)
+        
         navigationController?.pushViewController(photosVC, animated: true)
     }
     
@@ -93,5 +129,13 @@ class MainViewController: UIViewController {
         let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Close", style: .default, handler: { [weak self] _ in self?.dismiss(animated: true, completion: nil)}))
         present(alert, animated: true, completion: nil)
+    }
+    
+    private func updateNavigationIcon() {
+        let icon = imagePreview.image?
+                        .scaled(CGSize(width: 22, height: 22))
+                        .withRenderingMode(.alwaysOriginal)
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: icon, style: .done, target: nil, action: nil)
     }
 }

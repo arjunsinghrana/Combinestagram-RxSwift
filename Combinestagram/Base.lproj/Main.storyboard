@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="RMx-3f-FxP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="RMx-3f-FxP">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,7 +16,7 @@
             <objects>
                 <navigationController title="Master" id="RMx-3f-FxP" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="Pmd-2v-anx">
-                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -103,6 +103,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Combinestagram" id="E09-hM-Eum">
+                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="Kdw-Pg-Ceg"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="XF1-i7-ele">
                             <connections>
                                 <action selector="actionAdd" destination="iXO-Bu-Lsj" id="Nju-qq-y7r"/>
@@ -114,6 +115,7 @@
                         <outlet property="buttonSave" destination="kxB-yd-P8e" id="3gx-pC-USd"/>
                         <outlet property="imagePreview" destination="bih-xf-PNW" id="oec-j8-adI"/>
                         <outlet property="itemAdd" destination="XF1-i7-ele" id="Bd9-Uh-GXm"/>
+                        <outlet property="leftBarButtonItem" destination="Kdw-Pg-Ceg" id="aoq-5b-WVW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a5x-Eu-o3L" userLabel="First Responder" sceneMemberID="firstResponder"/>
